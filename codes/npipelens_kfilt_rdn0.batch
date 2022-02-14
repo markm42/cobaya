@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -q regular
+#SBATCH -J cobaya_npipe
+#SBATCH -C haswell
+#SBATCH --mail-type=END
+#SBATCH -t 08:30:00
+#SBATCH -o ./slurm_outputs/%j_npipe.out
+
+#OpenMP settings:
+export OMP_NUM_THREADS=4
+export OMP_PLACES=threads
+export OMP_PROC_BIND=spread
+
+srun -n 4 -c 16 --cpu_bind=cores cobaya-run /global/homes/m/markm/projects/npipelens/likelihoods/tests/Npipelens_kfilt_RDN0.yaml
