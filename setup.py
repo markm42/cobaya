@@ -31,6 +31,10 @@ def extract_docs_requirements():
     """Get requirements for building the documentation."""
     path_docs_requirements = path.join(path.abspath(path.dirname(__file__)),
                                        "docs/requirements.txt")
+    # Quick fix for pip install from PyPI: apparently tries to run this function before
+    # pulling the 'docs' folder. Assume this is only used with a git-pulled install.
+    if not path.exists(path_docs_requirements):
+        return []
     with open(path_docs_requirements, "r") as f:
         lines = f.readlines()
     i_first = next(i for i, line in enumerate(lines)
@@ -39,7 +43,7 @@ def extract_docs_requirements():
     return ["sphinx"] + reqs
 
 
-install_requires = ['numpy>=1.17.0', 'scipy>=1.5', 'pandas>=1.0.1,!=1.4.0',
+install_requires = ['numpy>=1.17.0', 'scipy>=1.5', 'pandas>=1.0.1',
                     'PyYAML>=5.1', 'requests>=2.18', 'py-bobyqa>=1.2',
                     'GetDist>=1.3.1', 'fuzzywuzzy>=0.17', 'packaging', 'tqdm',
                     'portalocker>=2.3.0', 'dill>=0.3.3']
